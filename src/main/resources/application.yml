@@ -1,0 +1,54 @@
+#debug 로그 활성화 여부
+debug: false
+
+#actuator의 endpoint를 모두 활성화
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+#로깅
+logging:
+  level:
+    com.rada-project-board: debug
+    #debug 로그 활성화 여부와 관련. false로 하되 servlet 로그는 debug로 오픈
+    org.springframework.web.servlet: debug
+    #jpa를 사용할 때 쿼리로그를 debug로그로 관찰 가능
+    org.hibernate.type.descriptor.sql.BasicBinder: trace
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/board
+    username: harriot
+    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    #테스트용 데이터 베이스 데이터를 생성할 수 있게끔?
+    defer-datasource-initialization: true
+    #entity를 보고 테이블 테이터를 유추해서 자동으로 ddl 문을 만들어줌
+    hibernate:
+      ddl-auto: create
+    #sql 문을 보여줌
+    show-sql: true
+    properties:
+      #쿼리문을 포메팅해서 보여줌
+      hibernate.format_sql: true
+      #연관관계가 매핑이 되어있는 쿼리를 사용하게 될 때 한번에 벌크로 select를 해올 수 있게끔 함 (n+1쿼리 해결?)
+      hibernate.default_batch_fetch_size: 100
+    h2.console.enabled: true
+    #data.sql을 언제 작동 시킬것인가
+    sql.init.mode: always
+
+
+
+---
+#spring:
+#  config:
+#    activate:
+#      on-profile: testdb
+#    datasource:
+#      url: jdbc:h2:mem:board;mode=mysql
+#      driverClassName: org.h2.Driver
+#    sql.init.mode: always
+#    test.database.replace: none
